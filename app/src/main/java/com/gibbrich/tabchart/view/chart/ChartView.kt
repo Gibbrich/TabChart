@@ -1,5 +1,6 @@
 package com.gibbrich.tabchart.view.chart
 
+import android.animation.ValueAnimator
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
@@ -91,8 +92,13 @@ class ChartView @JvmOverloads constructor(
             else -> Unit
         }
 
+        var animationDelay = 0L
         for (i in 0 until childCount) {
-            (getChildAt(i) as ChartBarView).value = newData[i].toString()
+            val chartBarView = getChildAt(i) as ChartBarView
+            // todo - incapsulate
+            chartBarView.value = newData[i].toString()
+            chartBarView.animator.startDelay = animationDelay
+            animationDelay += 100L
         }
     }
 }
