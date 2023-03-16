@@ -7,6 +7,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.shapes.RoundRectShape
+import android.os.Bundle
+import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.View
 import android.view.animation.BounceInterpolator
@@ -21,6 +23,9 @@ class ChartBarView @JvmOverloads constructor(
     companion object {
         const val MIN_WIDTH = 30
         const val MIN_MARGIN = 5
+
+        fun getRandomColor(): Int =
+            Color.rgb((random() * 255).toInt(), (random() * 255).toInt(), (random() * 255).toInt())
     }
 
     var value: String? = null
@@ -45,8 +50,7 @@ class ChartBarView @JvmOverloads constructor(
     }
 
     private val paint = Paint().apply {
-        color =
-            Color.rgb((random() * 255).toInt(), (random() * 255).toInt(), (random() * 255).toInt())
+        color = getRandomColor()
         style = Paint.Style.FILL
     }
 
@@ -61,6 +65,22 @@ class ChartBarView @JvmOverloads constructor(
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         animator.start()
+    }
+
+    override fun onSaveInstanceState(): Parcelable {
+        val bundle = Bundle()
+        bundle.putInt("color", paint.color)
+        bundle.putParcelable("superState", super.onSaveInstanceState())
+        return bundle
+    }
+
+    override fun onRestoreInstanceState(state: Parcelable?) {
+        var viewState = state
+        if (viewState is Bundle) {
+            paint.color = viewState.getInt("color", getRandomColor())
+            viewState = viewState.getParcelable("superState")
+        }
+        super.onRestoreInstanceState(viewState)
     }
 
     override fun onDraw(canvas: Canvas) {

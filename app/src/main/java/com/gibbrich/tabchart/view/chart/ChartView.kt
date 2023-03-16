@@ -96,6 +96,7 @@ class ChartView @JvmOverloads constructor(
         for (i in 0 until childCount) {
             val chartBarView = getChildAt(i) as ChartBarView
             // todo - incapsulate
+            chartBarView.id = i
             chartBarView.value = newData[i].toString()
             chartBarView.animator.startDelay = animationDelay
             animationDelay += 100L
